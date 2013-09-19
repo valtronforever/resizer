@@ -6,6 +6,7 @@ import gtk
 
 from resize import resize
 
+
 class Resizer(gtk.Window):
 
     def _destroy_cb(self, widget, *data):
@@ -53,6 +54,9 @@ class Resizer(gtk.Window):
         self.yResEntry = gtk.Entry()
         self.yResEntry.set_width_chars(4)
         self.yResEntry.set_text("600")
+        self.watermarkEntry = gtk.Entry()
+        self.watermarkEntry.set_width_chars(20)
+        self.watermarkEntry.set_text("cosmetist.com.ua")
 
         self.procBtn = gtk.Button("Proced")
         self.procBtn.connect("clicked", self._onProcBtn)
@@ -86,8 +90,15 @@ class Resizer(gtk.Window):
         hbox3.pack_start(self.yResEntry, False, False)
         vbox.pack_start(hbox3, False, False)
 
-        vbox.pack_start(self.procBtn, False, False)
+        hbox4 = gtk.HBox()
+        label = gtk.Label("Watermark:")
+        label.set_justify(gtk.JUSTIFY_LEFT)
+        label.set_width_chars(10)
+        hbox4.pack_start(label, False, False)
+        hbox4.pack_start(self.watermarkEntry, False, False)
+        vbox.pack_start(hbox4, False, False)
 
+        vbox.pack_start(self.procBtn, False, False)
 
         self.add(vbox)
     
@@ -110,7 +121,6 @@ class Resizer(gtk.Window):
         dialog.destroy()
         self.checkFields()
 
-
     def _onOutDirBtn(self, widget, *data):
         dialog = gtk.FileChooserDialog("Select output directory",
                                        None,
@@ -131,15 +141,14 @@ class Resizer(gtk.Window):
         outDir = self.outDirEntry.get_text()
         resX = self.xResEntry.get_text()
         resY = self.yResEntry.get_text()
+        watermark = self.watermarkEntry.get_text()
 
         self.procBtn.set_sensitive(False)
-        resize(inDir, outDir, resX, resY)
+        resize(inDir, outDir, resX, resY, watermark)
         self.procBtn.set_sensitive(True)
-
 
     def main(self):
         gtk.main()
-
 
 
 if __name__ == "__main__":
